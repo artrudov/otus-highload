@@ -4,7 +4,6 @@ import com.otus.highload.domain.NewUser
 import com.otus.highload.domain.RegisteredUser
 import com.otus.highload.domain.User
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.stereotype.Repository
 import java.math.BigInteger

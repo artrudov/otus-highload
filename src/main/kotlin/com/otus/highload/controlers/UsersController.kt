@@ -1,12 +1,10 @@
 package com.otus.highload.controlers
 
-import com.otus.highload.domain.AuthenticationRequest
 import com.otus.highload.domain.NewUser
 import com.otus.highload.domain.RegisteredUser
 import com.otus.highload.services.UsersService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
