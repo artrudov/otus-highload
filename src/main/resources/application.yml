@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: highload
+logging:
+  level:
+    org.springframework.security: trace
+
+# JWT Configuration
+jwt:
+  secret: 25cf3c44c8f39313e8cbf7c23e22fe8b2ee8b288ee5206b0a6397583a1f7f0ef
+  accessTokenExpiration: 600000
+  refreshTokenExpiration: 3600000
