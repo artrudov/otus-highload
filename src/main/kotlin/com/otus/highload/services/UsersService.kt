@@ -22,4 +22,8 @@ class UsersService {
     fun getUserById(userId: BigInteger): RegisteredUser? {
         return usersRepository.findById(userId)
     }
+
+    fun searchByFirstNameAndSecondName(firstName: String, secondName: String): List<RegisteredUser>? {
+        return usersRepository.searchByFirstNameAndSecondName(firstName, secondName)
+    }
 }

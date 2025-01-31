@@ -35,17 +35,41 @@ class UsersRepository {
     }
 
     fun findByUsername(username: String): User? {
-        return jdbcClient.sql(SQL_FIND_BY_USERNAME).params(mapOf("username" to username)).query(User::class.java).single()
+        return jdbcClient
+            .sql(SQL_FIND_BY_USERNAME)
+            .params(mapOf("username" to username))
+            .query(User::class.java)
+            .single()
     }
 
     fun findByUsernameCommon(username: String): RegisteredUser? {
-        return jdbcClient.sql(SQL_FIND_BY_USERNAME).params(mapOf("username" to username)).query(RegisteredUser::class.java).single()
+        return jdbcClient
+            .sql(SQL_FIND_BY_USERNAME)
+            .params(mapOf("username" to username))
+            .query(RegisteredUser::class.java)
+            .single()
     }
 
     fun findById(userId: BigInteger): RegisteredUser? {
         return jdbcClient
             .sql("SELECT * FROM users WHERE id = :userId")
             .params(mapOf("userId" to userId))
-            .query(RegisteredUser::class.java).single()
+            .query(RegisteredUser::class.java)
+            .single()
+    }
+
+    fun searchByFirstNameAndSecondName(firstName: String, secondName: String): List<RegisteredUser>? {
+        return jdbcClient
+            .sql("""
+                SELECT * FROM users 
+                WHERE second_name LIKE :secondName AND first_name LIKE :firstName
+                ORDER BY id ASC 
+            """.trimIndent())
+            .params(mapOf(
+                "firstName" to firstName,
+                "secondName" to secondName
+            ))
+            .query(RegisteredUser::class.java)
+            .list()
     }
 }

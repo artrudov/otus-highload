@@ -54,6 +54,6 @@ data class RegisteredUser (
     val firstName: String,
     val secondName: String,
     val birthdate: LocalDate,
-    val biography: String,
+    val biography: String?,
     val city: String,
 )
