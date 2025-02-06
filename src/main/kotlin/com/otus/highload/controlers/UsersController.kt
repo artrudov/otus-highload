@@ -25,7 +25,7 @@ class UsersController {
     }
 
     @GetMapping("/{userId}")
-    fun getUser(@PathVariable userId: BigInteger): ResponseEntity<RegisteredUser> {
+    fun getUser(@PathVariable userId: Long): ResponseEntity<RegisteredUser> {
         val registeredUser = usersService.getUserById(userId)
         return ResponseEntity.ok(registeredUser)
     }

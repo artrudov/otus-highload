@@ -6,6 +6,7 @@ import com.otus.highload.repositories.UsersRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.math.BigInteger
 
 @Service
@@ -19,7 +20,7 @@ class UsersService {
         return usersRepository.createUser(newUser)
     }
 
-    fun getUserById(userId: BigInteger): RegisteredUser? {
+    fun getUserById(userId: Long): RegisteredUser? {
         return usersRepository.findById(userId)
     }
 

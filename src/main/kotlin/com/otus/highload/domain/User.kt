@@ -49,7 +49,7 @@ data class NewUser (
 )
 
 data class RegisteredUser (
-    val id: BigInteger,
+    val id: Long,
     val username: String,
     val firstName: String,
     val secondName: String,
