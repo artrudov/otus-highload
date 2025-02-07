@@ -20,7 +20,6 @@ class UsersRepository {
   @Autowired
   lateinit var jdbcClient: JdbcClient
 
-  @Transactional
   fun createUser(newUser: NewUser): RegisteredUser? {
     val sql = """
             INSERT INTO users (username, password, first_name, second_name, city, biography, birthdate)
@@ -52,7 +51,6 @@ class UsersRepository {
     )
   }
 
-  @Transactional(readOnly = true)
   fun findByUsername(username: String): User? {
     return jdbcClient
       .sql(SQL_FIND_BY_USERNAME)
@@ -61,7 +59,6 @@ class UsersRepository {
       .single()
   }
 
-  @Transactional(readOnly = true)
   fun findById(userId: Long): RegisteredUser? {
     return jdbcClient
       .sql("SELECT * FROM users WHERE id = :userId")
@@ -70,7 +67,6 @@ class UsersRepository {
       .single()
   }
 
-  @Transactional(readOnly = true)
   fun searchByFirstNameAndSecondName(firstName: String, secondName: String): List<RegisteredUser>? {
     return jdbcClient
       .sql(

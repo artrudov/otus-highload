@@ -1,10 +1,25 @@
 package com.otus.highload.security
 
 import com.otus.highload.repositories.UsersRepository
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+
+class CustomUser : User {
+    var id: Long
+
+    constructor(
+        username: String?,
+        password: String?,
+        authorities: Collection<GrantedAuthority?>,
+        id: Long
+    ) : super(username, password, authorities) {
+        this.id = id
+    }
+}
 
 class JwtUserDetailsService(
     private val usersRepository: UsersRepository
@@ -13,10 +28,8 @@ class JwtUserDetailsService(
         val user = usersRepository.findByUsername(username)
             ?: throw UsernameNotFoundException("User $username not found!")
 
-        return User.builder()
-            .username(user.username)
-            .password(user.password)
-            .roles(user.role.name)
-            .build()
+        val roles: Collection<GrantedAuthority> = listOf(SimpleGrantedAuthority(user.role.name))
+
+        return CustomUser(user.username, user.password, roles, user.id)
     }
 }

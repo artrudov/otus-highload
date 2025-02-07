@@ -8,7 +8,7 @@ import java.math.BigInteger
 import java.time.LocalDate
 
 data class User(
-    val id: BigInteger,
+    val id: Long,
     val username: String,
     val password: String,
     val role: Role
