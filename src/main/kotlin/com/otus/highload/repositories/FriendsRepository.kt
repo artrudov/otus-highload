@@ -21,12 +21,21 @@ class FriendsRepository {
   fun add(friendId: Long, username: Long) {
     val sql = "INSERT INTO friends (user_id, friend_id) VALUES (:userId, :friendId)"
 
-    println(jdbcClient.sql(sql).params(mapOf(Pair("userId", username), Pair("friendId", friendId))).update())
+    jdbcClient
+      .sql(sql)
+      .params(mapOf(
+        "userId" to username,
+        "friendId" to friendId
+      ))
+      .query()
   }
 
   fun delete(friendId: Long, username: Long) {
     val sql = "DELETE FROM friends WHERE user_id = :userId AND friend_id = :friendId"
 
-    println(jdbcClient.sql(sql).params(mapOf(Pair("userId", username), Pair("friendId", friendId))).update())
+    jdbcClient
+      .sql(sql)
+      .params(mapOf("userId" to username, "friendId" to friendId))
+      .query()
   }
 }
