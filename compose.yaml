@@ -8,3 +8,9 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5442:5432"
+    command: ["postgres", "-c", "log_statement=all"]
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379'

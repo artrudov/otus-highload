@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 import kotlin.random.Random
 
 @Component
-class V7__Posts_Generated : BaseJavaMigration() {
+class V8__Users_Friends_Generated : BaseJavaMigration() {
   override fun migrate(context: Context) {
     val jdbcTemplate = JdbcTemplate(
       SingleConnectionDataSource(context.connection, true)
@@ -23,33 +23,27 @@ class V7__Posts_Generated : BaseJavaMigration() {
     val namedTemplate = NamedParameterJdbcTemplate(jdbcTemplate)
     val batchedParams: MutableList<SqlParameterSource> = mutableListOf()
 
-    println("${LocalDateTime.now()}: Filling batched params for creating posts")
+    println("${LocalDateTime.now()}: Filling batched params for creating friends")
 
-    val commonPost = File("src/main/resources/db/migration/posts.txt").readText()
-
-    for (i in 1..100_000) {
-      val endIndex = Random.nextInt(500, 5000)
-      val randomSubstring = commonPost.substring(0, endIndex)
-
+    for (i in 1..500) {
       val params = mapOf(
-        "userId" to Random.nextInt(1, 1000),
-        "content" to randomSubstring,
-        "createdDate" to LocalDateTime.now(),
+        "userId" to Random.nextInt(1, 1_000),
+        "friendId" to Random.nextInt(1, 10_000),
       )
 
       batchedParams.add(MapSqlParameterSource(params))
     }
 
-    println("${LocalDateTime.now()}: Filled batched params for posts")
+    println("${LocalDateTime.now()}: Filled batched params for friends")
 
     namedTemplate.batchUpdate(
       """
-          INSERT INTO posts (user_id, content, created_date)
-          VALUES (:userId, :content, :createdDate)
+          INSERT INTO friends (user_id, friend_id)
+          VALUES (:userId, :friendId)
       """.trim(),
       batchedParams.toTypedArray()
     )
 
-    println("${LocalDateTime.now()}: Inserted batched params for posts")
+    println("${LocalDateTime.now()}: Inserted batched params for friends")
   }
 }

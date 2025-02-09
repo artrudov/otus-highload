@@ -3,6 +3,7 @@ package com.otus.highload.repositories
 import com.otus.highload.domain.CreatedPost
 import com.otus.highload.domain.Post
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
@@ -29,10 +30,12 @@ class PostsRepository {
 
     jdbcClient
       .sql(sql)
-      .params(mapOf(
-        "userId" to userId,
-        "content" to post.text
-      ))
+      .params(
+        mapOf(
+          "userId" to userId,
+          "content" to post.text
+        )
+      )
       .update(keyHolder)
 
     return CreatedPost(
@@ -47,10 +50,12 @@ class PostsRepository {
 
     jdbcClient
       .sql(sql)
-      .params(mapOf(
-        "postId" to post.postId,
-        "content" to post.content
-      ))
+      .params(
+        mapOf(
+          "postId" to post.postId,
+          "content" to post.content
+        )
+      )
       .update()
 
     return post
@@ -60,5 +65,21 @@ class PostsRepository {
     val sql = "DELETE FROM posts WHERE post_id = :postId"
 
     jdbcClient.sql(sql).query()
+  }
+
+  @Cacheable(cacheNames = ["feed", "#userId"])
+  fun getFeed(userId: Long): List<CreatedPost> {
+    val sql = """
+      SELECT * FROM posts WHERE user_id IN (
+        SELECT friend_id FROM friends WHERE user_id = :userId
+      )
+      ORDER BY created_date DESC 
+      LIMIT 1000
+    """.trimIndent()
+
+    return jdbcClient
+      .sql(sql)
+      .params(mapOf("userId" to userId))
+      .query(CreatedPost::class.java).list()
   }
 }

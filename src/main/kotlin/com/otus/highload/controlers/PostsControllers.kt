@@ -5,6 +5,10 @@ import com.otus.highload.domain.Post
 import com.otus.highload.security.CustomUser
 import com.otus.highload.services.PostsService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -43,4 +47,16 @@ class PostsControllers {
       postsService.update(post, userDetails.id)
     )
   }
+
+  @GetMapping("/feed")
+  fun getFeed(
+    @PageableDefault(size = 10) pageable: Pageable,
+    @AuthenticationPrincipal userDetails: CustomUser
+  ): ResponseEntity<List<CreatedPost>> {
+    println(pageable)
+    return ResponseEntity.ok(
+      postsService.getFeed(pageable, userDetails.id)
+    )
+  }
+
 }

@@ -18,6 +18,16 @@ class FriendsRepository {
   @Autowired
   lateinit var jdbcClient: JdbcClient
 
+  fun getAllFriendsId(userId: Long): List<Long> {
+    val sql = "SELECT user_id FROM friends WHERE user_id = :userId"
+
+    return jdbcClient
+      .sql(sql)
+      .params(mapOf("userId" to userId))
+      .query(Long::class.java)
+      .list()
+  }
+
   fun add(friendId: Long, username: Long) {
     val sql = "INSERT INTO friends (user_id, friend_id) VALUES (:userId, :friendId)"
 
