@@ -5,8 +5,6 @@ import com.otus.highload.domain.Post
 import com.otus.highload.security.CustomUser
 import com.otus.highload.services.PostsService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
@@ -53,10 +51,8 @@ class PostsControllers {
     @PageableDefault(size = 10) pageable: Pageable,
     @AuthenticationPrincipal userDetails: CustomUser
   ): ResponseEntity<List<CreatedPost>> {
-    println(pageable)
     return ResponseEntity.ok(
       postsService.getFeed(pageable, userDetails.id)
     )
   }
-
 }

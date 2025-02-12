@@ -19,7 +19,7 @@ class FriendsRepository {
   lateinit var jdbcClient: JdbcClient
 
   fun getAllFriendsId(userId: Long): List<Long> {
-    val sql = "SELECT user_id FROM friends WHERE user_id = :userId"
+    val sql = "SELECT friend_id FROM friends WHERE user_id = :userId"
 
     return jdbcClient
       .sql(sql)

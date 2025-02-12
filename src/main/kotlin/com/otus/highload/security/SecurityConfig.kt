@@ -47,6 +47,8 @@ class SecurityConfig {
                 it
                     .requestMatchers("/auth/login", "/auth/refresh", "/error")
                     .permitAll()
+                    .requestMatchers("/posts/feed/posted")
+                    .permitAll()
                     .requestMatchers(HttpMethod.POST, "/users")
                     .permitAll()
                     .anyRequest()

@@ -14,3 +14,9 @@ services:
     image: 'redis:latest'
     ports:
       - '6379'
+
+  rabbitmq:
+    image: "rabbitmq:4.1-rc-management"
+    ports:
+      - "15672:15672"
+      - "5672:5672"

@@ -5,6 +5,7 @@ spring:
       time-to-live: "10m"
   application:
     name: highload
+
 logging:
   level:
     org.springframework.security: trace

@@ -1,18 +1,28 @@
 package com.otus.highload.services
 
+import com.otus.highload.configurations.RabbitMQConfig
 import com.otus.highload.domain.CreatedPost
 import com.otus.highload.domain.Post
 import com.otus.highload.exceptions.AccessEditPostDenied
 import com.otus.highload.repositories.FriendsRepository
 import com.otus.highload.repositories.PostsRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.domain.Pageable
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+
 
 @Service
 class PostsService {
+  val log: Logger = LoggerFactory.getLogger(PostsService::class.java)
+
+  @Autowired
+  lateinit var rabbitTemplate: RabbitTemplate
+
   @Autowired
   lateinit var postsRepository: PostsRepository
 
@@ -26,6 +36,7 @@ class PostsService {
   fun add(post: Post, userId: Long): CreatedPost {
     val createdPost = postsRepository.save(post, userId)
     revalidateFriendsCache(userId)
+    sendNewPost(createdPost)
 
     return createdPost
   }
@@ -48,8 +59,7 @@ class PostsService {
 
   fun getFeed(pageable: Pageable, userId: Long): List<CreatedPost> {
     val posts = postsRepository.getFeed(userId)
-    println(pageable.pageSize)
-    println(pageable.pageNumber)
+
     val startIndex = pageable.pageSize * pageable.pageNumber
     val endIndex = startIndex + pageable.pageSize
 
@@ -64,8 +74,18 @@ class PostsService {
     }
   }
 
+  fun sendNewPost(post: CreatedPost) {
+    log.info("Sending post ${post.postId} to rabbit")
+
+    rabbitTemplate.convertAndSend(
+      RabbitMQConfig.EXCHANGE_POSTS,
+      RabbitMQConfig.toPostAuthorRoutingKey(post.userId),
+      post
+    )
+  }
+
   @CacheEvict(cacheNames = ["feed", "#userId"])
   fun revalidateUserCache(userId: Long) {
-    println("User $userId feed cache evicted")
+    log.info("User $userId feed cache evicted")
   }
 }
