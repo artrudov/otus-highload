@@ -1,13 +1,11 @@
 spring:
-#  config:
-#    import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5444/social
+    url: jdbc:postgresql://172.18.0.5:5432/social
     username: otus
     password: highload
     driverClassName: org.postgresql.Driver
     slave:
-      url: jdbc:postgresql://localhost:5443/social
+      url: jdbc:postgresql://172.18.0.5:5433/social
       username: otus
       password: highload
       driverClassName: org.postgresql.Driver
